@@ -93,7 +93,7 @@ dependencies {
 
     // If I include this then grailsApplication is not injected into DefaultConstraintEvaluatorFactoryBean
     // by the time DefaultConstraintEvaluatorFactoryBean.getObject is run, and default constraints in application.groovy are ignored
-//    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.1.0"
+    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.1.2"
 }
 
 tasks.withType(Test) {
