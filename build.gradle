@@ -1,0 +1,116 @@
+buildscript {
+    repositories {
+        maven { url "https://repo.grails.org/grails/restricted" }
+        maven {
+            url = 'https://repository.apache.org/content/groups/snapshots'
+            content {
+                includeVersionByRegex('org[.]apache[.](grails|groovy).*', '.*', '.*SNAPSHOT')
+            }
+        }
+    }
+    dependencies {
+        classpath platform("org.apache.grails:grails-bom:$grailsVersion")
+        classpath "org.apache.grails:grails-data-hibernate5-dbmigration"
+        classpath "org.apache.grails:grails-data-hibernate5"
+        classpath "org.apache.grails:grails-gradle-plugins"
+    }
+}
+
+plugins {
+    id "groovy"
+    id "war"
+    id "idea"
+    id "cloud.wondrify.asset-pipeline" version "5.0.12"
+    id "eclipse"
+}
+
+// Not Published to Gradle Plugin Portal
+apply plugin: "org.apache.grails.gradle.grails-web"
+apply plugin: "org.apache.grails.gradle.grails-gsp"
+
+java {
+    toolchain {
+        it.languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+group = "com.example"
+
+repositories {
+    maven { url "https://repo.grails.org/grails/restricted" }
+    maven {
+        url = 'https://repository.apache.org/content/groups/snapshots'
+        content {
+            includeVersionByRegex('org[.]apache[.](grails|groovy).*', '.*', '.*SNAPSHOT')
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'grails-app/migrations'
+        }
+    }
+}
+
+ext['hibernate.version']='5.6.15.Final'  // Note this a downgrade from the version recommended by Boot, as required by Grails
+
+dependencies {
+    profile "org.apache.grails.profiles:web"
+    developmentOnly "org.webjars.npm:bootstrap:5.3.3"
+    developmentOnly "org.webjars.npm:bootstrap-icons:1.11.3"
+    developmentOnly "org.webjars.npm:jquery:3.7.1"
+    implementation platform("org.apache.grails:grails-bom:$grailsVersion")
+    implementation "org.apache.grails:grails-core"
+    implementation "org.apache.grails:grails-logging"
+    implementation "org.apache.grails:grails-databinding"
+    implementation "org.apache.grails:grails-i18n"
+    implementation "org.apache.grails:grails-interceptors"
+    implementation "org.apache.grails:grails-rest-transforms"
+    implementation "org.apache.grails:grails-services"
+    implementation "org.apache.grails:grails-url-mappings"
+    implementation "org.apache.grails:grails-web-boot"
+    implementation "org.apache.grails:grails-data-hibernate5"
+    implementation "org.apache.grails:grails-data-hibernate5-dbmigration"
+    implementation "org.apache.grails:grails-gsp"
+    implementation "org.apache.grails:grails-scaffolding"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    console "org.apache.grails:grails-console"
+    runtimeOnly "cloud.wondrify:asset-pipeline-grails"
+    runtimeOnly "org.apache.tomcat:tomcat-jdbc"
+    runtimeOnly "com.h2database:h2"
+    runtimeOnly "org.fusesource.jansi:jansi"
+    integrationTestImplementation testFixtures("org.apache.grails:grails-geb")
+    testImplementation "org.apache.grails:grails-testing-support-datamapping"
+    testImplementation "org.apache.grails:grails-testing-support-web"
+    testImplementation "org.spockframework:spock-core"
+
+    // If I include this then grailsApplication is not injected into DefaultConstraintEvaluatorFactoryBean
+    // by the time DefaultConstraintEvaluatorFactoryBean.getObject is run, and default constraints in application.groovy are ignored
+//    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.1.0"
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+assets {
+    excludes = [
+            'webjars/jquery/**',
+            'webjars/bootstrap/**',
+            'webjars/bootstrap-icons/**'
+    ]
+    includes = [
+            'webjars/jquery/*/dist/jquery.js',
+            'webjars/bootstrap/*/dist/js/bootstrap.bundle.js',
+            'webjars/bootstrap/*/dist/css/bootstrap.css',
+            'webjars/bootstrap-icons/*/font/bootstrap-icons.css',
+            'webjars/bootstrap-icons/*/font/fonts/*',
+    ]
+}
