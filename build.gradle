@@ -1,11 +1,8 @@
 buildscript {
     repositories {
-        maven { url "https://repo.grails.org/grails/restricted" }
+        mavenCentral()
         maven {
-            url = 'https://repository.apache.org/content/groups/snapshots'
-            content {
-                includeVersionByRegex('org[.]apache[.](grails|groovy).*', '.*', '.*SNAPSHOT')
-            }
+           url = 'https://repo.grails.org/grails/restricted'
         }
     }
     dependencies {
@@ -37,13 +34,8 @@ java {
 group = "com.example"
 
 repositories {
+    mavenCentral()
     maven { url "https://repo.grails.org/grails/restricted" }
-    maven {
-        url = 'https://repository.apache.org/content/groups/snapshots'
-        content {
-            includeVersionByRegex('org[.]apache[.](grails|groovy).*', '.*', '.*SNAPSHOT')
-        }
-    }
 }
 
 sourceSets {
@@ -58,9 +50,9 @@ ext['hibernate.version']='5.6.15.Final'  // Note this a downgrade from the versi
 
 dependencies {
     profile "org.apache.grails.profiles:web"
-    developmentOnly "org.webjars.npm:bootstrap:5.3.3"
-    developmentOnly "org.webjars.npm:bootstrap-icons:1.11.3"
-    developmentOnly "org.webjars.npm:jquery:3.7.1"
+    testAndDevelopmentOnly "org.webjars.npm:bootstrap"
+    testAndDevelopmentOnly "org.webjars.npm:bootstrap-icons"
+    testAndDevelopmentOnly "org.webjars.npm:jquery"
     implementation platform("org.apache.grails:grails-bom:$grailsVersion")
     implementation "org.apache.grails:grails-core"
     implementation "org.apache.grails:grails-logging"
@@ -90,10 +82,6 @@ dependencies {
     testImplementation "org.apache.grails:grails-testing-support-datamapping"
     testImplementation "org.apache.grails:grails-testing-support-web"
     testImplementation "org.spockframework:spock-core"
-
-    // If I include this then grailsApplication is not injected into DefaultConstraintEvaluatorFactoryBean
-    // by the time DefaultConstraintEvaluatorFactoryBean.getObject is run, and default constraints in application.groovy are ignored
-    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.1.2"
 }
 
 tasks.withType(Test) {
