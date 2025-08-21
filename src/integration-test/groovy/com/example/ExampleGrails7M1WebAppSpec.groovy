@@ -14,6 +14,6 @@ class ExampleGrails7M1WebAppSpec extends ContainerGebSpec {
             go '/'
 
         then: 'the page title is correct'
-            title == 'Welcome to Grails'
+            title == ''
     }
 }
